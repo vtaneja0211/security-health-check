@@ -36,19 +36,17 @@ jobs:
       issues: write
     steps:
       - uses: actions/checkout@v4
-      - uses: OWNER/security-health-check@v1
+      - uses: vtaneja0211/security-health-check@v1
         with:
           app-path: .
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-Replace `OWNER` with your GitHub username or org.
-
 ### Minimal integration
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: OWNER/security-health-check@v1
+- uses: vtaneja0211/security-health-check@v1
   with:
     app-path: .
     github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -58,7 +56,7 @@ Replace `OWNER` with your GitHub username or org.
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: OWNER/security-health-check@v1
+- uses: vtaneja0211/security-health-check@v1
   with:
     app-path: apps/frontend
     github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -69,7 +67,7 @@ Replace `OWNER` with your GitHub username or org.
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: OWNER/security-health-check@v1
+- uses: vtaneja0211/security-health-check@v1
   id: security
   with:
     app-path: .
