@@ -1,0 +1,19 @@
+{
+  "name": "security-health-check",
+  "version": "1.0.0",
+  "description": "Static security analysis for JS/TS apps — secrets, auth, dependencies, code quality, and CSP. Get a 0–100 health score posted to your PRs.",
+  "main": "index.js",
+  "bin": {
+    "security-health-check": "./index.js"
+  },
+  "scripts": {
+    "check-test": "node index.js --dir . --no-fail",
+    "version:patch": "npm version patch -m 'chore: release v%s'",
+    "version:minor": "npm version minor -m 'chore: release v%s'",
+    "version:major": "npm version major -m 'chore: release v%s'"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "minimist": "^1.2.8"
+  }
+}

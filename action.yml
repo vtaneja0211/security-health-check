@@ -1,0 +1,72 @@
+name: "Security Health Check"
+description: "Static security analysis for JS/TS apps — secrets, auth, dependencies, code quality, and CSP. Get a 0–100 health score posted to your PRs."
+author: "Varun Taneja"
+
+branding:
+  icon: "shield"
+  color: "red"
+
+inputs:
+  app-path:
+    description: "Path to the JS/TS app relative to repo root (e.g. apps/frontend)"
+    required: true
+  github-token:
+    description: "GitHub token for posting PR comments"
+    required: true
+  threshold:
+    description: "Minimum passing score (0–100)"
+    required: false
+    default: "70"
+  post-comment:
+    description: "Whether to post results as a PR comment"
+    required: false
+    default: "true"
+  node-version:
+    description: "Node.js version to use"
+    required: false
+    default: "20"
+
+outputs:
+  score:
+    description: "Health score from 0–100"
+    value: ${{ steps.score.outputs.score }}
+  has-findings:
+    description: "Whether any check reported issues (true/false)"
+    value: ${{ steps.score.outputs.has_findings }}
+
+runs:
+  using: "composite"
+  steps:
+    # ── Setup ──────────────────────────────────────────────────────────────
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Install action dependencies
+      shell: bash
+      run: npm ci --prefix ${{ github.action_path }} --omit=dev
+
+    # ── Scan ───────────────────────────────────────────────────────────────
+    - name: Run security health check
+      shell: bash
+      run: |
+        node ${{ github.action_path }}/index.js \
+          --dir "${{ inputs.app-path }}" \
+          --threshold "${{ inputs.threshold }}" \
+          --json /tmp/security-report.json \
+          --no-fail || true
+
+    # ── Score + comment ────────────────────────────────────────────────────
+    - name: Post comment and set outputs
+      id: score
+      uses: actions/github-script@v7
+      if: always()
+      env:
+        POST_COMMENT: ${{ inputs.post-comment }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const result = require("${{ github.action_path }}/scripts/post-comment.js");
+          await result({ github, context, core });
