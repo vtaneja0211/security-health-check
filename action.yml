@@ -1,5 +1,5 @@
 name: "Security Health Check"
-description: "Static security analysis for JS/TS apps — secrets, auth, dependencies, code quality, and CSP. Get a 0–100 health score posted to your PRs."
+description: "Static JS/TS security checks: secrets, auth, deps, code quality, CSP. PR health score 0–100"
 author: "Varun Taneja"
 
 branding:
